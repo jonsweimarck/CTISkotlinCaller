@@ -1,0 +1,31 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version "1.5.0"
+//    id 'java'
+}
+
+group 'org.bfb'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+    implementation 'com.mashape.unirest:unirest-java:1.4.9'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile){
+    kotlinOptions {
+        jvmTarget="11"
+        javaParameters = true
+        freeCompilerArgs=["-Xjvn-default=all"]
+    }
+}
+
+//test {
+//    useJUnitPlatform()
+//}
