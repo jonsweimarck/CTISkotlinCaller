@@ -1,32 +1,30 @@
-import java.time.format.DateTimeFormatter;
 
-public class DocumentChecker {
-
-    static final String user = "";
-    static final String password = "";
-
-    public static void main(String[] args) throws Exception {
-
-        var ids = ClinicalTrialIdMap.get(ClinicalTrialIdMap.UAT_JW11);
-
-        var restclient = new RestClient(user, password);
-
-        var allDocumentsXMLdoc = restclient.getAllDocumentsXML(ids.getCliniclaTrialId(), ids.getApplicationId());
-        var documentMetaDatas = ParserUtil.extractDocumentMetaData(allDocumentsXMLdoc);
-        var documentHttpStatuses = restclient.checkDocumentHttpStatus(ids.getCliniclaTrialId(), ids.getApplicationId(), documentMetaDatas);
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
-        System.out.println(header(ids));
-        System.out.println(DocumentCheckerResultKt.resultAsString(documentHttpStatuses));
+    const val user = ""
+    const val password = ""
+
+    fun main(args: Array<String>) {
+        val ids = ClinicalTrialIdMap.get(ClinicalTrialIdMap.UAT_JW10)
+        val restclient = RestClient(user, password)
+        val allDocumentsXMLdoc = restclient.getAllDocumentsXML(ids.cliniclaTrialId, ids.applicationId)
+        val documentMetaDatas = ParserUtil.extractDocumentMetaData(allDocumentsXMLdoc)
+        val documentHttpStatuses =
+            restclient.checkDocumentHttpStatus(ids.cliniclaTrialId, ids.applicationId, documentMetaDatas)
+
+        println(header(ids))
+        println(resultAsString(documentHttpStatuses))
     }
 
-    private static String header(ClinicalTrialIds ids) {
-
-        return String.format("\n\n%s\n[%s] Försöker hämta alla dokument för part1 av prövningen '%s' (%s)\n%s",
-                "********************************************************************************************************************************",
-                java.time.LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm")),
-                ids.getName(),
-                ids.getCliniclaTrialId(),
-                "********************************************************************************************************************************");
+    private fun header(ids: ClinicalTrialIds): String {
+        return String.format(
+            "\n\n%s\n[%s] Försöker hämta alla dokument för part1 av prövningen '%s' (%s)\n%s",
+            "********************************************************************************************************************************",
+            LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm")),
+            ids.name,
+            ids.cliniclaTrialId,
+            "********************************************************************************************************************************"
+        )
     }
-}
