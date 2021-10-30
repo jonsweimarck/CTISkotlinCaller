@@ -1,4 +1,3 @@
-import com.mashape.unirest.http.Unirest
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 import org.xml.sax.InputSource
@@ -13,49 +12,6 @@ fun xmlToDocument(xmlString: String?): Document {
         doc.documentElement.normalize()
         return doc
     }
-
-//fun extractToDocumentMetaDatas(allDocumentsXMLdoc: Document): List<DocumentMetaData> {
-//    val returnList: MutableList<DocumentMetaData> = ArrayList()
-//    val nList = allDocumentsXMLdoc.getElementsByTagName("document")
-//    for (i in 0 until nList.length) {
-//        val nNode = nList.item(i)
-//        val eElement = nNode as Element
-//        val documentUrlElement = eElement.getElementsByTagName("documentUrl").item(0) as Element
-//        val documentIdElement = eElement.getElementsByTagName("documentId").item(0) as Element
-//        val documentTitleElement = eElement.getElementsByTagName("title").item(0) as Element
-//        val documentSysVersionElement = eElement.getElementsByTagName("systemVersion").item(0) as Element
-//        val documentBusVersionElement = eElement.getElementsByTagName("businessVersion").item(0) as Element
-//        val documentFromDateElement = eElement.getElementsByTagName("fromDate").item(0) as Element
-//        val documentApplicationPartElement = if (eElement.getElementsByTagName("applicationPart")
-//                .item(0) != null
-//        ) eElement.getElementsByTagName("applicationPart").item(0).textContent else "null"
-//        val documentSectionElement =
-//            if (eElement.getElementsByTagName("section").item(0) != null) eElement.getElementsByTagName("section")
-//                .item(0).textContent else "null"
-//        val documentTypeCodeNodeList = eElement.getElementsByTagName("documentTypeCode")
-//        val documentTypeCode = documentTypeCodeNodeList.item(0) as Element
-//        val displayNameElement = documentTypeCode.getElementsByTagName("displayName").item(0) as Element
-//        returnList.add(
-//            DocumentMetaData(
-//                documentUrlElement.textContent,
-//                displayNameElement.textContent,
-//                documentIdElement.textContent,
-//                documentTitleElement.textContent,
-//                documentSysVersionElement.textContent,
-//                documentBusVersionElement.textContent,
-//                documentFromDateElement.textContent,
-//                documentApplicationPartElement,
-//                documentSectionElement
-//            )
-//        )
-//    }
-//    return returnList
-//}
-
-private fun urlGetter(user: String, password: String)  = { url: String ->
-    val response = Unirest.get(url).basicAuth(user, password).asString()
-    SimpleHttpResponse(response.body, HttpStatus(response.status, response.statusText))
-}
 
 fun extractToDocumentMetaDatas(allDocumentsXMLdoc: Document) = { clinicalTrialId: String, applicationId: String ->
     val returnList: MutableList<DocumentMetaData> = ArrayList()
