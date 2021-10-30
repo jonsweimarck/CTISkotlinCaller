@@ -9,17 +9,12 @@ internal class DocumentCheckerResultTest {
 
     @Test
     fun `empty input results in header and empty row`() {
-        val documentHttpStatuses = listOf<DocumentHttpStatus>()
-        val checker = DocumentCheckerResult(documentHttpStatuses)
-
-        assertEquals(header + "\n", checker.result)
+        assertEquals(header + "\n", resultAsString(listOf()))
     }
 
     @Test
     fun `one entry input results in header and expected single row`() {
-        val checker = DocumentCheckerResult(listOf(dummyDocumentHttpStatus()))
-
-        assertEquals(header + "\n" + dummyRow, checker.result)
+        assertEquals(header + "\n" + dummyRow, resultAsString(listOf(dummyDocumentHttpStatus())))
     }
 
     private fun dummyDocumentMetaData(): DocumentMetaData =
