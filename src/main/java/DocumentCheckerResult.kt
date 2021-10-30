@@ -1,4 +1,3 @@
-
 import java.util.stream.Collectors
 
 fun resultAsString (documentHttpStatuses: List<DocumentHttpStatus>) : String {
@@ -58,7 +57,7 @@ private fun formatResultLine(dhs: DocumentHttpStatus): String {
         dhs.documentMetaData.businessVersion,
         dhs.documentMetaData.applicationPart,
         dhs.documentMetaData.section,
-        dhs.HttpStatusOrHttpError.toString()
+        if(dhs.httpStatusOrHttpError is HttpStatus) dhs.httpStatusOrHttpError.status.toString() else dhs.toString()
     )
 }
 

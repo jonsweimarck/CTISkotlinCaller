@@ -5,7 +5,7 @@ import kotlin.test.assertEquals
 internal class DocumentCheckerResultTest {
 
     val header =  "documentType                                                                         docId     documentUrl                             title                                             sysVers        busVers        httpStat  appPart   section   "
-    val dummyRow ="documentType                                                                         docId     documentUrl                             title                                             sysVers        busVers        200 OK    appPart   section   "
+    val dummyRow ="documentType                                                                         docId     documentUrl                             title                                             sysVers        busVers        200       appPart   section   "
 
     @Test
     fun `empty input results in header and empty row`() {

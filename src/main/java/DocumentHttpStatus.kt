@@ -1,3 +1,3 @@
-data class DocumentHttpStatus(var documentMetaData:DocumentMetaData , var HttpStatusOrHttpError:  HttpStatusOrHttpError)
+data class DocumentHttpStatus(val documentMetaData:DocumentMetaData , val httpStatusOrHttpError:  HttpStatusOrHttpError)
 
 
