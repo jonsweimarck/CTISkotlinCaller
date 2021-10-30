@@ -15,7 +15,7 @@ public class DocumentChecker {
         var documentMetaDatas = ParserUtil.extractDocumentMetaData(allDocumentsXMLdoc);
         var documentHttpStatuses = restclient.checkDocumentHttpStatus(ids.getCliniclaTrialId(), ids.getApplicationId(), documentMetaDatas);
 
-        var result = new DocumentCheckerResult(documentMetaDatas, documentHttpStatuses);
+        var result = new DocumentCheckerResult(documentHttpStatuses);
         System.out.println(header(ids));
         System.out.println(result.getResult());
     }

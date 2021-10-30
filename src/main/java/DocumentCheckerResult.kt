@@ -1,72 +1,73 @@
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
-public class DocumentCheckerResult {
+import java.util.stream.Collectors
 
-    private List<DocumentMetaData> documentMetaDatas;
-    private List<Optional<DocumentHttpStatus>> documentHttpStatuses;
+class DocumentCheckerResult(
+    private val documentHttpStatuses: List<DocumentHttpStatus>
+) {
+    val result: String
+        get() {
+            val header = formatLine(
+                "documentType",
+                "docId",
+                "documentUrl",
+                "title",
+                "sysVers",
+                "busVers",
+                "appPart",
+                "section",
+                "httpStat"
+            )
 
-    public DocumentCheckerResult(List<DocumentMetaData> documentMetaDatas, List<Optional<DocumentHttpStatus>> documentHttpStatuses) {
-        this.documentMetaDatas = documentMetaDatas;
-        this.documentHttpStatuses = documentHttpStatuses;
+            val unsortedList = documentHttpStatuses
+                .map { entry: DocumentHttpStatus -> formatResultLine(entry) }
+                .stream().sorted().collect(Collectors.toList())
+            return """
+        $header
+        ${unsortedList.stream().collect(Collectors.joining("\n"))}
+        """.trimIndent()
+        }
+
+    private fun formatLine(
+        s1: String,
+        s2: String,
+        s3: String,
+        s4: String,
+        s5: String,
+        s6: String,
+        s7: String,
+        s8: String,
+        s9: String
+    ): String {
+        return String.format(
+            "%s%s%s%s%s%s%s%s%s",
+            padwithSpaces(s1, 85),  // title
+            padwithSpaces(s2, 10),  // docId
+            padwithSpaces(s3, 40),  // documentUrl
+            padwithSpaces(s4, 50),  // title
+            padwithSpaces(s5, 15),  // sysVers
+            padwithSpaces(s6, 15),  // busVers
+            padwithSpaces(s9, 10),  // httpStatus
+            padwithSpaces(s7, 10),  // appPart
+            padwithSpaces(s8, 10)   // section
+        )
     }
 
-    public String getResult() {
-        var header = formatLine("documentType", "docId", "documentUrl", "title", "sysVers", "busVers", "appPart", "section", "httpStat");
-        var unsortedMap = documentMetaDatas.stream().collect(Collectors.toMap(metaData -> metaData, metaData -> findHttpStatus(metaData,documentHttpStatuses ) ));
-        var unsortedList = unsortedMap.entrySet().stream()
-                .map(entry -> formatResultLine(entry)).collect(Collectors.toList())
-                .stream().sorted().collect(Collectors.toList());
-        return header + "\n" + unsortedList.stream().collect(Collectors.joining("\n"));
-
-    }
-
-    private String formatLine(String s1, String s2, String s3, String s4, String s5, String s6, String s7, String s8, String s9) {
-//        return String.format("%s%s%s",
-//                padwithSpaces(s1, 85),
-//                padwithSpaces(s2, 10), // docId
-//                padwithSpaces(s3, 40));
-
-//        return String.format("%s%s%s%s%s%s",
-//                padwithSpaces(s1, 85),
-//                padwithSpaces(s2, 10), // docId
-//                padwithSpaces(s3, 40),
-//                padwithSpaces(s4, 50), // title
-//                padwithSpaces(s5, 15),
-//                padwithSpaces(s6, 15));
-        return String.format("%s%s%s%s%s%s%s%s%s",
-                padwithSpaces(s1, 85), // title
-                padwithSpaces(s2, 10), // docId
-                padwithSpaces(s3, 40), // documentUrl
-                padwithSpaces(s4, 50), // title
-                padwithSpaces(s5, 15), // sysVers
-                padwithSpaces(s6, 15), // busVers
-                padwithSpaces(s9, 10), // httpStatus
-                padwithSpaces(s7, 10), // appPart
-                padwithSpaces(s8, 10)); // section
-
-    }
-
-    private String formatResultLine(Map.Entry<DocumentMetaData, Optional<DocumentHttpStatus>> entry) {
+    private fun formatResultLine(dhs: DocumentHttpStatus): String {
         return formatLine(
-                entry.getKey().getDisplayName(),
-                entry.getKey().getDocumentId(),
-                entry.getKey().getDocumentUrl(),
-                entry.getKey().getTitle(),
-                entry.getKey().getSystemVersion(),
-                entry.getKey().getBusinessVersion(),
-                entry.getKey().getApplicationPart(),
-                entry.getKey().getSection(),
-                entry.getValue().isPresent() ? String.valueOf(entry.getValue().get().getHttpStatus().getStatus()) : "***** Kunde inte ansluta *****");
+            dhs.documentMetaData.displayName,
+            dhs.documentMetaData.documentId,
+            dhs.documentMetaData.documentUrl,
+            dhs.documentMetaData.title,
+            dhs.documentMetaData.systemVersion,
+            dhs.documentMetaData.businessVersion,
+            dhs.documentMetaData.applicationPart,
+            dhs.documentMetaData.section,
+            dhs.HttpStatusOrHttpError.toString()
+        )
     }
 
-    private Optional<DocumentHttpStatus> findHttpStatus(DocumentMetaData metaData, List<Optional<DocumentHttpStatus>> documentHttpStatuses) {
-        return documentHttpStatuses.stream().filter(dhs-> dhs.isPresent() && dhs.get().getDocumentMetaData().equals(metaData)).findFirst().orElse(Optional.empty());
-    }
 
-    private String padwithSpaces(String inputString, int finalLength){
-        return String.format("%1$-" + finalLength + "s", inputString);
+    private fun padwithSpaces(inputString: String, finalLength: Int): String {
+        return String.format("%1$-" + finalLength + "s", inputString)
     }
 }

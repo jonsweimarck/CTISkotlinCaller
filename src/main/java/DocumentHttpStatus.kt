@@ -1,3 +1,3 @@
-data class DocumentHttpStatus(var documentMetaData:DocumentMetaData , var httpStatus:  HttpStatus)
+data class DocumentHttpStatus(var documentMetaData:DocumentMetaData , var HttpStatusOrHttpError:  HttpStatusOrHttpError)
 
 

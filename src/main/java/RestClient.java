@@ -15,7 +15,6 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class RestClient {
@@ -42,19 +41,18 @@ public class RestClient {
     }
 
 
-    public List<Optional<DocumentHttpStatus>> checkDocumentHttpStatus(String clinicalTrialId, String applicationId, List<DocumentMetaData> documentMetaDatas) {
+    public List<DocumentHttpStatus> checkDocumentHttpStatus(String clinicalTrialId, String applicationId, List<DocumentMetaData> documentMetaDatas) {
         return documentMetaDatas.stream().map(documentMetaData -> checkSingleDocumentHttpStatus(clinicalTrialId, applicationId, documentMetaData)).collect(Collectors.toList());
     }
 
-    private Optional<DocumentHttpStatus> checkSingleDocumentHttpStatus(String clinicalTrialId, String applicationId, DocumentMetaData documentMetaData) {
+    private DocumentHttpStatus checkSingleDocumentHttpStatus(String clinicalTrialId, String applicationId, DocumentMetaData documentMetaData) {
         try {
             var singleDocumentURL = baseURL + "/clinicalTrials/" + clinicalTrialId + "/applications/" + applicationId + "/part1/documents/" + documentMetaData.getDocumentUrl();
-//            var singleDocumentURL = baseURL + "/clinicalTrials/" + clinicalTrialId + "/documents/" + documentMetaData.documentUrl();
             var response = Unirest.get(singleDocumentURL).basicAuth(user, password).asString();
-            return Optional.of(new DocumentHttpStatus(documentMetaData, new HttpStatus(response.getStatus(), response.getStatusText())));
+            return new DocumentHttpStatus(documentMetaData, new HttpStatus(response.getStatus(), response.getStatusText()));
         } catch (UnirestException e) {
             e.printStackTrace();
-            return Optional.empty();
+            return new DocumentHttpStatus(documentMetaData, new HttpError());
         }
     }
 
