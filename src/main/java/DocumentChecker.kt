@@ -27,17 +27,18 @@ fun main(args: Array<String>) {
     println(resultAsString(documentHttpStatuses))
 }
 
-private fun urlGetter(user: String, password: String) = { url: String -> Unirest.get(url).basicAuth(user, password).asString()}
+//private fun urlGetter(user: String, password: String) = { url: String -> Unirest.get(url).basicAuth(user, password).asString()}
+
+private fun urlGetter(user: String, password: String)  = { url: String ->
+    val response = Unirest.get(url).basicAuth(user, password).asString()
+    SimpleHttpResponse(response.body, HttpStatus(response.status, response.statusText))
+}
 
 private fun header(ids: ClinicalTrialIds): String {
-    return String.format(
-        "\n\n%s\n[%s] Försöker hämta alla dokument för part1 av prövningen '%s' (%s)\n%s",
-        "********************************************************************************************************************************",
-        LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm")),
-        ids.name,
-        ids.cliniclaTrialId,
-        "********************************************************************************************************************************"
-    )
+    return "\n\n********************************************************************************************************************************\n" +
+            "[${LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm"))}]" +
+            " Försöker hämta alla dokument för part1 av prövningen '${ids.name}' (${ids.cliniclaTrialId})\n" +
+            "********************************************************************************************************************************"
 }
 
 // This will make Unirest ignore certificates,

@@ -1,13 +1,11 @@
 
-import com.mashape.unirest.http.HttpResponse
-
 import org.w3c.dom.Document
 
 
     private val baseURL = "https://euctis-uat.ema.europa.eu/ct-authority-services/services/v1"
 
     fun getAllDocumentsXML(
-        urlGetter: (String) -> HttpResponse<String>,
+        urlGetter: (String) -> SimpleHttpResponse,
         clinicalTrialId: String,
         applicationId: String): Document {
 
@@ -17,7 +15,7 @@ import org.w3c.dom.Document
     }
 
     fun checkDocumentHttpStatus(
-        urlGetter: (String) -> HttpResponse<String>,
+        urlGetter: (String) -> SimpleHttpResponse,
         clinicalTrialId: String,
         applicationId: String,
         documentMetaDatas: List<DocumentMetaData>
@@ -33,12 +31,12 @@ import org.w3c.dom.Document
     }
 
     private fun checkSingleDocumentHttpStatus(
-        urlGetter: (String) -> HttpResponse<String>,
+        urlGetter: (String) -> SimpleHttpResponse,
         clinicalTrialId: String,
         applicationId: String,
         documentMetaData: DocumentMetaData
     ): DocumentHttpStatus {
         val singleDocumentURL = "$baseURL/clinicalTrials/$clinicalTrialId/applications/$applicationId/part1/documents/${documentMetaData.documentUrl}"
         val response = urlGetter(singleDocumentURL)
-        return DocumentHttpStatus(documentMetaData, HttpStatus(response.status, response.statusText))
+        return DocumentHttpStatus(documentMetaData, response.httpStatus)
     }
