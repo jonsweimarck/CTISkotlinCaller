@@ -27,9 +27,10 @@ internal class DocumentCheckerResultTest {
             "busVers",
             "fromDate",
             "appPart",
-            "section"
+            "section",
+            "documentFetchUrl"
         )
 
-    private fun dummyDocumentHttpStatus(): DocumentHttpStatus =
-        DocumentHttpStatus(dummyDocumentMetaData(), HttpStatus(200, "OK"))
+    private fun dummyDocumentHttpStatus(): Pair<DocumentMetaData, HttpStatus> =
+        Pair(dummyDocumentMetaData(), HttpStatus(200, "OK"))
 }

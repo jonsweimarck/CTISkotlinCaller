@@ -1,6 +1,6 @@
 import java.util.stream.Collectors
 
-fun resultAsString (documentHttpStatuses: List<DocumentHttpStatus>) : String {
+fun resultAsString (metadatasAndHttpStatuses: List<Pair<DocumentMetaData, HttpStatus>>) : String {
     val header = formatLine(
                 "documentType",
                 "docId",
@@ -12,13 +12,11 @@ fun resultAsString (documentHttpStatuses: List<DocumentHttpStatus>) : String {
                 "section",
                 "httpStat")
 
-    val unsortedList = documentHttpStatuses
-        .map { entry: DocumentHttpStatus -> formatResultLine(entry) }
-        .stream().sorted().collect(Collectors.toList())
+    val sortedList = metadatasAndHttpStatuses.map { pair -> formatResultLine(pair) }.sorted()
 
     return """
 $header
-${unsortedList.stream().collect(Collectors.joining("\n"))}
+${sortedList.stream().collect(Collectors.joining("\n"))}
 """.trimIndent()
 }
 
@@ -47,17 +45,17 @@ private fun formatLine(
     )
 }
 
-private fun formatResultLine(dhs: DocumentHttpStatus): String {
+private fun formatResultLine(pair: Pair<DocumentMetaData, HttpStatus>): String {
     return formatLine(
-        dhs.documentMetaData.displayName,
-        dhs.documentMetaData.documentId,
-        dhs.documentMetaData.documentUrl,
-        dhs.documentMetaData.title,
-        dhs.documentMetaData.systemVersion,
-        dhs.documentMetaData.businessVersion,
-        dhs.documentMetaData.applicationPart,
-        dhs.documentMetaData.section,
-        if(dhs.httpStatusOrHttpError is HttpStatus) dhs.httpStatusOrHttpError.status.toString() else dhs.toString()
+        pair.first.displayName,
+        pair.first.documentId,
+        pair.first.documentUrl,
+        pair.first.title,
+        pair.first.systemVersion,
+        pair.first.businessVersion,
+        pair.first.applicationPart,
+        pair.first.section,
+        if(pair.second is HttpStatus) pair.second.status.toString() else pair.second.toString()
     )
 }
 

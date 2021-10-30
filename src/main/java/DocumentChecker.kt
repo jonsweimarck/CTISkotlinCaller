@@ -1,4 +1,3 @@
-
 import com.mashape.unirest.http.Unirest
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy
@@ -19,15 +18,14 @@ fun main(args: Array<String>) {
 
     val urlGetter = urlGetter(user, password)
 
-    val allDocumentsXMLdoc = getAllDocumentsXML(urlGetter, ids.cliniclaTrialId, ids.applicationId)
-    val documentMetaDatas = extractDocumentMetaData(allDocumentsXMLdoc)
-    val documentHttpStatuses = checkDocumentHttpStatus(urlGetter, ids.cliniclaTrialId, ids.applicationId, documentMetaDatas)
+    val httpResponse = getCtisDocuments(urlGetter, ids.cliniclaTrialId, ids.applicationId)
+    val asDomDocument = xmlToDocument(httpResponse.body);
+    val documentMetaDatas = extractToDocumentMetaDatas(asDomDocument)(ids.cliniclaTrialId, ids.applicationId)
+    val documentMetaDatasAndHttpStatuses = getHttpStatusForEachDocument(urlGetter, documentMetaDatas)
 
     println(header(ids))
-    println(resultAsString(documentHttpStatuses))
+    println(resultAsString(documentMetaDatasAndHttpStatuses))
 }
-
-//private fun urlGetter(user: String, password: String) = { url: String -> Unirest.get(url).basicAuth(user, password).asString()}
 
 private fun urlGetter(user: String, password: String)  = { url: String ->
     val response = Unirest.get(url).basicAuth(user, password).asString()
