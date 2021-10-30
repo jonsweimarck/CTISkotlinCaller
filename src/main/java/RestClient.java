@@ -48,7 +48,7 @@ public class RestClient {
 
     private Optional<DocumentHttpStatus> checkSingleDocumentHttpStatus(String clinicalTrialId, String applicationId, DocumentMetaData documentMetaData) {
         try {
-            var singleDocumentURL = baseURL + "/clinicalTrials/" + clinicalTrialId + "/applications/" + applicationId + "/part1/documents/" + documentMetaData.documentUrl;
+            var singleDocumentURL = baseURL + "/clinicalTrials/" + clinicalTrialId + "/applications/" + applicationId + "/part1/documents/" + documentMetaData.getDocumentUrl();
 //            var singleDocumentURL = baseURL + "/clinicalTrials/" + clinicalTrialId + "/documents/" + documentMetaData.documentUrl();
             var response = Unirest.get(singleDocumentURL).basicAuth(user, password).asString();
             return Optional.of(new DocumentHttpStatus(documentMetaData, new HttpStatus(response.getStatus(), response.getStatusText())));

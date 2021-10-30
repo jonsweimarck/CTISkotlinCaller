@@ -51,14 +51,14 @@ public class DocumentCheckerResult {
 
     private String formatResultLine(Map.Entry<DocumentMetaData, Optional<DocumentHttpStatus>> entry) {
         return formatLine(
-                entry.getKey().displayName,
-                entry.getKey().documentId,
-                entry.getKey().documentUrl,
-                entry.getKey().title,
-                entry.getKey().systemVersion,
-                entry.getKey().businessVersion,
-                entry.getKey().applicationPart,
-                entry.getKey().section,
+                entry.getKey().getDisplayName(),
+                entry.getKey().getDocumentId(),
+                entry.getKey().getDocumentUrl(),
+                entry.getKey().getTitle(),
+                entry.getKey().getSystemVersion(),
+                entry.getKey().getBusinessVersion(),
+                entry.getKey().getApplicationPart(),
+                entry.getKey().getSection(),
                 entry.getValue().isPresent() ? String.valueOf(entry.getValue().get().getHttpStatus().getStatus()) : "***** Kunde inte ansluta *****");
     }
 
