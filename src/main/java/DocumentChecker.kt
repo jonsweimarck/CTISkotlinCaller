@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter
         val ids = ClinicalTrialIdMap.get(ClinicalTrialIdMap.UAT_JW10)
         val restclient = RestClient(user, password)
         val allDocumentsXMLdoc = restclient.getAllDocumentsXML(ids.cliniclaTrialId, ids.applicationId)
-        val documentMetaDatas = ParserUtil.extractDocumentMetaData(allDocumentsXMLdoc)
+        val documentMetaDatas = extractDocumentMetaData(allDocumentsXMLdoc)
         val documentHttpStatuses =
             restclient.checkDocumentHttpStatus(ids.cliniclaTrialId, ids.applicationId, documentMetaDatas)
 

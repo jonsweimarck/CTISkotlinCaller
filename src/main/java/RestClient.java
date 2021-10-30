@@ -37,7 +37,7 @@ public class RestClient {
         var allDocumentsURL = baseURL + "/clinicalTrials/" + clinicalTrialId + "/applications/" + applicationId + "/part1/documents?pagesize=30";
         var response = Unirest.get(allDocumentsURL).basicAuth(user, password).asString();
 
-        return ParserUtil.xmlToDocument(response.getBody());
+        return ParserUtilKt.xmlToDocument(response.getBody());
     }
 
 
