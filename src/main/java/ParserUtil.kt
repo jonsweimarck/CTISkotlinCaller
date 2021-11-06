@@ -5,7 +5,10 @@ import java.io.StringReader
 import javax.xml.parsers.DocumentBuilderFactory
 
 
-fun xmlToDocument(xmlString: String?): Document {
+fun xmlToDocumentMetaDatas(xmlString: String, ids: ClinicalTrialIds): List<DocumentMetaData> =
+    extractToDocumentMetaDatas(xmlToDocument(xmlString), ids)
+
+private fun xmlToDocument(xmlString: String): Document {
         val dbf = DocumentBuilderFactory.newInstance()
         val db = dbf.newDocumentBuilder()
         val doc = db.parse(InputSource(StringReader(xmlString)))
@@ -13,7 +16,7 @@ fun xmlToDocument(xmlString: String?): Document {
         return doc
     }
 
-fun extractToDocumentMetaDatas(allDocumentsXMLdoc: Document) = { clinicalTrialId: String, applicationId: String ->
+private fun extractToDocumentMetaDatas(allDocumentsXMLdoc: Document, ids: ClinicalTrialIds) : MutableList<DocumentMetaData> {
     val returnList: MutableList<DocumentMetaData> = ArrayList()
     val nList = allDocumentsXMLdoc.getElementsByTagName("document")
     for (i in 0 until nList.length) {
@@ -45,9 +48,9 @@ fun extractToDocumentMetaDatas(allDocumentsXMLdoc: Document) = { clinicalTrialId
                 documentFromDateElement.textContent,
                 documentApplicationPartElement,
                 documentSectionElement,
-                singleDocumentURL(clinicalTrialId, applicationId, documentUrlElement.textContent)
+                singleDocumentURL(ids.cliniclaTrialId, ids.applicationId, documentUrlElement.textContent)
             )
         )
     }
-    returnList
+    return returnList
 }

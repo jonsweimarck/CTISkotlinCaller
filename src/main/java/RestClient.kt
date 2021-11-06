@@ -1,17 +1,15 @@
-fun getCtisDocuments(
+fun ctisDocumentsFor(
     urlGetter: (String) -> SimpleHttpResponse,
-    clinicalTrialId: String,
-    applicationId: String): SimpleHttpResponse {
+    ids: ClinicalTrialIds): SimpleHttpResponse {
 
-    return urlGetter(allDocumentsURL(clinicalTrialId, applicationId))
+    return urlGetter(allDocumentsURL(ids.cliniclaTrialId, ids.applicationId))
 }
 
 fun getHttpStatusForEachDocument(
     urlGetter: (String) -> SimpleHttpResponse,
-    documentMetaDatas: List<DocumentMetaData>): List<Pair<DocumentMetaData, HttpStatus>> {
+    documentMetaDatas: List<DocumentMetaData>): List<Pair<DocumentMetaData, HttpStatus>> =
 
-    return documentMetaDatas.map { documentMetaData -> checkSingleDocumentHttpStatus(urlGetter, documentMetaData) }
-}
+    documentMetaDatas.map { documentMetaData -> checkSingleDocumentHttpStatus(urlGetter, documentMetaData) }
 
 private fun checkSingleDocumentHttpStatus(
     urlGetter: (String) -> SimpleHttpResponse,

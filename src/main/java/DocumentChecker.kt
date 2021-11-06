@@ -15,17 +15,17 @@ fun main(args: Array<String>) {
     makeClientIgnoreServerCertificates()
 
     val ids = ClinicalTrialIdMap.get(ClinicalTrialIdMap.UAT_JW10)
-
     val urlGetter = urlGetter(user, password)
 
-    val httpResponse = getCtisDocuments(urlGetter, ids.cliniclaTrialId, ids.applicationId)
-    val asDomDocument = xmlToDocument(httpResponse.body);
-    val documentMetaDatas = extractToDocumentMetaDatas(asDomDocument)(ids.cliniclaTrialId, ids.applicationId)
+    val xmlString = ctisDocumentsFor(urlGetter, ids).body
+
+    val documentMetaDatas = xmlToDocumentMetaDatas(xmlString, ids)
     val documentMetaDatasAndHttpStatuses = getHttpStatusForEachDocument(urlGetter, documentMetaDatas)
 
     println(header(ids))
     println(resultAsString(documentMetaDatasAndHttpStatuses))
 }
+
 
 private fun urlGetter(user: String, password: String)  = { url: String ->
     val response = Unirest.get(url).basicAuth(user, password).asString()
